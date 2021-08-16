@@ -1,0 +1,16 @@
+{
+  "name": "@lootbox/library",
+  "version": "1.0.0",
+  "description": "Create a JSON index of files within one or more folders.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lootbox/library"
+  },
+  "author": {
+    "name": "lootbox",
+    "email": "lootboxproject@protonmail.com",
+    "url": "http://github.com/lootbox"
+  },
+  "license": "MIT"
+}

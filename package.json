@@ -1,16 +1,16 @@
 {
-  "name": "@lootbox/library",
+  "name": "@royalarchives/catalog",
   "version": "1.0.0",
   "description": "Create a JSON index of files within one or more folders.",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lootbox/library"
+    "url": "https://github.com/server/catalog"
   },
   "author": {
-    "name": "lootbox",
-    "email": "lootboxproject@protonmail.com",
-    "url": "http://github.com/lootbox"
+    "name": "server",
+    "email": "serverproject@protonmail.com",
+    "url": "http://github.com/server"
   },
   "license": "MIT"
 }

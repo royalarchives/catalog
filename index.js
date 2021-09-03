@@ -1,5 +1,5 @@
 
 module.exports = {
   scan: require('./scanner.js').scan,
-  load: require('./library.js').load
+  load: require('./catalog.js').load
 }

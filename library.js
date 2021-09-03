@@ -12,7 +12,7 @@ if (process.argv[1] === __filename) {
   commandLineStart()
 }
 
-async function commandLineStart () {
+async function commandLineStart() {
   const moduleNames = []
   let index = 2
   while (true) {
@@ -27,27 +27,27 @@ async function commandLineStart () {
     }
     index++
   }
-  const library = await load(moduleNames)
-  console.log(JSON.stringify(library, null, '  '))
+  const catalog = await load(moduleNames)
+  console.log(JSON.stringify(catalog, null, '  '))
   return process.exit(0)
 }
 
-async function load (moduleNames) {
+async function load(moduleNames) {
   if (moduleNames && !Array.isArray(moduleNames)) {
     moduleNames = [moduleNames]
   }
   const idIndex = {}
   const filePathIndex = {}
   const treeIndex = {}
-  const library = await loadJSONFile()
-  library.modules = moduleNames
-  library.api = {
+  const catalog = await loadJSONFile()
+  catalog.modules = moduleNames
+  catalog.api = {
     files: {
       get: require('./api/files.get.js'),
       list: require('./api/files.list.js')
     }
   }
-  library.indexArray = (array) => {
+  catalog.indexArray = (array) => {
     for (const object of array) {
       idIndex[object.id] = object
       if (object.filePath) {
@@ -55,35 +55,35 @@ async function load (moduleNames) {
       }
     }
   }
-  library.getObject = async (idOrFilePath) => {
+  catalog.getObject = async (idOrFilePath) => {
     if (idOrFilePath.startsWith('/')) {
       if (filePathIndex[idOrFilePath]) {
-        return copyItem(library, filePathIndex[idOrFilePath])
+        return copyItem(catalog, filePathIndex[idOrFilePath])
       }
       return
     }
     if (!idIndex[idOrFilePath]) {
       return
     }
-    return copyItem(library, idIndex[idOrFilePath])
+    return copyItem(catalog, idIndex[idOrFilePath])
   }
-  library.getObjects = async (collection, options) => {
+  catalog.getObjects = async (collection, options) => {
     const unfilteredResults = []
     for (const object of collection) {
-      const item = copyItem(library, object)
+      const item = copyItem(catalog, object)
       unfilteredResults.push(item)
     }
     const results = filter(unfilteredResults, options)
     sort(results, options)
     return paginate(results, options)
   }
-  library.getTreeObject = (id) => {
+  catalog.getTreeObject = (id) => {
     if (!treeIndex[id]) {
       return
     }
-    return copyItem(library, treeIndex[id])
+    return copyItem(catalog, treeIndex[id])
   }
-  function indexTreeItem (item) {
+  function indexTreeItem(item) {
     treeIndex[item.id] = item
     if (item.contents && item.contents.length) {
       for (const child of item.contents) {
@@ -94,19 +94,19 @@ async function load (moduleNames) {
       }
     }
   }
-  indexTreeItem(library.tree)
+  indexTreeItem(catalog.tree)
   if (moduleNames) {
     for (const moduleName of moduleNames) {
       const module = require(moduleName)
-      await module.load(library)
+      await module.load(catalog)
     }
   }
-  library.indexArray(library.files)
-  return library
+  catalog.indexArray(catalog.files)
+  return catalog
 }
 
-async function loadJSONFile () {
-  const blankLibrary = {
+async function loadJSONFile() {
+  const blankCatalog = {
     files: [],
     tree: {
       type: 'folder',
@@ -115,29 +115,29 @@ async function loadJSONFile () {
       contents: []
     }
   }
-  const uncompressedFilePath = path.join(process.env.DATA_PATH, 'library.json')
+  const uncompressedFilePath = path.join(process.env.DATA_PATH, 'catalog.json')
   const uncompessedFileExists = await existsAsync(uncompressedFilePath)
   if (uncompessedFileExists) {
     const rawData = await fs.readFile(uncompressedFilePath)
     if (!rawData || !rawData.length) {
-      return blankLibrary
+      return blankCatalog
     }
     return JSON.parse(rawData.toString())
   }
-  const gzippedFilePath = path.join(process.env.DATA_PATH, 'library.json.gz')
+  const gzippedFilePath = path.join(process.env.DATA_PATH, 'catalog.json.gz')
   const gzippedFileExists = await existsAsync(gzippedFilePath)
   if (gzippedFileExists) {
     const rawData = await fs.readFile(gzippedFilePath)
     if (!rawData || !rawData.length) {
-      return blankLibrary
+      return blankCatalog
     }
     const data = await unzipAsync(rawData)
     return JSON.parse(data.toString())
   }
-  return blankLibrary
+  return blankCatalog
 }
 
-async function existsAsync (itemPath) {
+async function existsAsync(itemPath) {
   try {
     await fs.stat(itemPath)
     return true
@@ -146,11 +146,11 @@ async function existsAsync (itemPath) {
   }
 }
 
-function normalize (text) {
+function normalize(text) {
   return text.toLowerCase().replace(/[\W_]+/g, ' ').trim()
 }
 
-async function copyItem (library, source) {
+async function copyItem(catalog, source) {
   const item = {}
   for (const key in source) {
     if (!Array.isArray(source[key])) {
@@ -160,7 +160,7 @@ async function copyItem (library, source) {
     item[key] = []
     for (const i in source[key]) {
       if (source[key][i] && source[key][i].length && source[key][i].indexOf('_')) {
-        const entity = await library.getObject(source[key][i])
+        const entity = await catalog.getObject(source[key][i])
         item[key][i] = {
           id: entity.id,
           type: entity.type,
@@ -174,7 +174,7 @@ async function copyItem (library, source) {
   return item
 }
 
-function paginate (array, options) {
+function paginate(array, options) {
   const limit = options && options.limit ? parseInt(options.limit, 10) : 0
   const offset = options && options.offset ? parseInt(options.offset, 10) : 0
   const sizeWas = array.length
@@ -192,7 +192,7 @@ function paginate (array, options) {
   }
 }
 
-function filter (array, options) {
+function filter(array, options) {
   const filtered = []
   for (const item of array) {
     let group
@@ -251,7 +251,7 @@ function filter (array, options) {
   return filtered
 }
 
-function sort (array, options) {
+function sort(array, options) {
   if (!options.sort) {
     return array
   }
@@ -287,7 +287,7 @@ function sort (array, options) {
   return array
 }
 
-function matchInArray (array, matchType, value) {
+function matchInArray(array, matchType, value) {
   const normalizedValue = normalize(value)
   if (matchType === 'start' || matchType === 'starts') {
     return array.filter(entity => normalize(entity.name).startsWith(normalizedValue))
@@ -301,7 +301,7 @@ function matchInArray (array, matchType, value) {
   return array.filter(entity => normalize(entity.name) === normalizedValue)
 }
 
-function matchValue (item, property, matchType, value) {
+function matchValue(item, property, matchType, value) {
   const normalizedProperty = normalize(item[property])
   const normalizedValue = normalize(value)
   if (matchType === 'start' || matchType === 'starts') {

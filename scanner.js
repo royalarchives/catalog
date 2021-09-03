@@ -20,8 +20,8 @@ if (process.argv[1] === __filename) {
   commandLineStart()
 }
 
-async function commandLineStart () {
-  const libraryPaths = []
+async function commandLineStart() {
+  const catalogPaths = []
   const moduleNames = []
   let index = 2
   while (true) {
@@ -44,79 +44,79 @@ async function commandLineStart () {
     if (!exists) {
       break
     }
-    libraryPaths.push(process.argv[index])
+    catalogPaths.push(process.argv[index])
     index++
   }
-  await scan(moduleNames, libraryPaths)
+  await scan(moduleNames, catalogPaths)
   console.log('[indexer]', 'finished scanning')
   return process.exit(0)
 }
 
-async function scan (moduleNames, libraryPaths) {
-  if (!Array.isArray(libraryPaths)) {
-    libraryPaths = [libraryPaths]
+async function scan(moduleNames, catalogPaths) {
+  if (!Array.isArray(catalogPaths)) {
+    catalogPaths = [catalogPaths]
   }
   if (moduleNames && !Array.isArray(moduleNames)) {
     moduleNames = [moduleNames]
   }
-  const Library = require('./library.js')
+  const Catalog = require('./catalog.js')
   const startTime = process.hrtime()
-  const library = await Library.load(moduleNames, libraryPaths)
-  for (const libraryPath of libraryPaths) {
-    await scanLibrary(library, libraryPath)
+  const catalog = await Catalog.load(moduleNames, catalogPaths)
+  for (const catalogPath of catalogPaths) {
+    await scanCatalog(catalog, catalogPath)
     if (moduleNames) {
       for (const moduleName of moduleNames) {
         const module = require(moduleName)
         if (module.scan) {
-          console.log('[indexer]', 'module scanning library', moduleName)
-          await module.scan(library, libraryPath)
+          console.log('[indexer]', 'module scanning catalog', moduleName)
+          await module.scan(catalog, catalogPath)
         }
       }
     }
   }
   if (process.env.GZIP && process.env.GZIP !== 'false') {
     console.log('[indexer]', 'compressing data')
-    const compressedData = await gzipAsync(JSON.stringify(library))
-    const libraryDataPath = path.join(process.env.DATA_PATH, 'library.json.gzip')
+    const compressedData = await gzipAsync(JSON.stringify(catalog))
+    const catalogDataPath = path.join(process.env.DATA_PATH, 'catalog.json.gzip')
     console.log('[indexer]', 'writing compressed data', compressedData.length)
-    await fs.writeFile(libraryDataPath, compressedData)
+    await fs.writeFile(catalogDataPath, compressedData)
   } else {
-    const buffer = Buffer.from(JSON.stringify(library, null, '  '))
-    const libraryDataPath = path.join(process.env.DATA_PATH, 'library.json')
+    const buffer = Buffer.from(JSON.stringify(catalog, null, '  '))
+    const catalogDataPath = path.join(process.env.DATA_PATH, 'catalog.json')
     console.log('[indexer]', 'writing uncompressed data', buffer.length)
-    await fs.writeFile(libraryDataPath, buffer)
+    await fs.writeFile(catalogDataPath, buffer)
   }
   const stopTime = process.hrtime(startTime)
   console.info('[indexer', 'total scan time:', stopTime[0] + 's', stopTime[1] / 1000000 + 'ms')
 }
 
-async function scanLibrary (library, libraryPath) {
+async function scanCatalog(catalog, catalogPath) {
   const startTime = process.hrtime()
-  console.log('[indexer]', 'scanning library', libraryPath)
-  if (!library.files) {
-    library.files = []
-    library.tree = {
+  console.log('[indexer]', 'scanning catalog', catalogPath)
+  if (!catalog.files) {
+    catalog.files = []
+    catalog.tree = {
       type: 'folder',
-      id: 'folder_/library',
-      folder: 'library',
+      id: 'folder_/catalog',
+      folder: 'catalog',
       contents: []
     }
   }
   console.log('[indexer]', 'indexing files')
   const folder = {
-    id: `folder_${libraryPath}`,
+    id: `folder_${catalogPath}`,
     type: 'folder',
-    path: libraryPath,
+    path: catalogPath,
     contents: []
   }
-  library.tree.contents.push(folder)
-  await indexFolder(library, folder.contents, libraryPath, libraryPath)
+  catalog.tree.contents.push(folder)
+  await indexFolder(catalog, folder.contents, catalogPath, catalogPath)
   const stopTime = process.hrtime(startTime)
-  console.log('[indexer]', 'library scan time:', stopTime[0] + 's', stopTime[1] / 1000000 + 'ms')
-  return library
+  console.log('[indexer]', 'catalog scan time:', stopTime[0] + 's', stopTime[1] / 1000000 + 'ms')
+  return catalog
 }
 
-async function indexFolder (library, parentContents, currentFolder, libraryPath) {
+async function indexFolder(catalog, parentContents, currentFolder, catalogPath) {
   console.log('[indexer]', 'indexing folder', currentFolder)
   const folderContents = await fs.readdir(currentFolder)
   for (const item of folderContents) {
@@ -132,7 +132,7 @@ async function indexFolder (library, parentContents, currentFolder, libraryPath)
         contents: []
       }
       parentContents.push(folder)
-      await indexFolder(library, folder.contents, folder.path, libraryPath)
+      await indexFolder(catalog, folder.contents, folder.path, catalogPath)
       continue
     }
     const extension = itemPath.split('.').pop().toLowerCase()
@@ -146,6 +146,6 @@ async function indexFolder (library, parentContents, currentFolder, libraryPath)
       path: itemPath
     }
     parentContents.push(file.id)
-    library.files.push(file)
+    catalog.files.push(file)
   }
 }

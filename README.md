@@ -17,7 +17,7 @@ Library indexes all the files within one or more folders and maps the folder str
 
 You can clone the project and run it from a command line:
 
-    $ git clone https//github.com/lootbox/library
+    $ git clone https//github.com/server/library
     $ cd library
     $ node scanner.js /path/to/files
 
@@ -27,12 +27,12 @@ It can work with multiple paths:
 
 And load modules from the command line:
 
-    $ node scanner.js @lootbox/library-music /path/to/files
+    $ node scanner.js @royalarchives/library-music /path/to/files
 
 Or use it as a module in NodeJS to support your project: 
 
     const Library = require('library')
-    const musicLibrary = await Library.load('@lootbox/library-music', '/path/to/music')
+    const musicLibrary = await Library.load('@royalarchives/library-music', '/path/to/music')
 
 [Top of page](#documentation)    
 
@@ -63,7 +63,7 @@ This is the data structure of the index.  Files can be sorted, filtered and pagi
 
 | Module name                    | Description                                                                                                           |
 | ------------------------------ | --------------------------------------------------------------------------------------------------------------------- |
-| @lootbox/library-music | Indexes library files for `MP3` and `FLAC` media and adds songs, albums, genres, and credited persons to your library | 
+| @royalarchives/library-music | Indexes library files for `MP3` and `FLAC` media and adds songs, albums, genres, and credited persons to your library | 
 
 [Top of page](#documentation)
 
@@ -93,7 +93,7 @@ The command line arguments are module names and then paths:
 
     $ node scanner.js /path/to/folder
 
-    $ node scanner.js @lootbox/library-music /path/to/music
+    $ node scanner.js @royalarchives/library-music /path/to/music
 
 [Top of page](#documentation)
 
@@ -101,20 +101,20 @@ The command line arguments are module names and then paths:
 
 The command line arguments are module names and then paths:
 
-    $ node library.js @lootbox/library-music /path/to/music /path/to/more/music /path/to/other/music
+    $ node library.js @royalarchives/library-music /path/to/music /path/to/more/music /path/to/other/music
 
 [Top of page](#documentation)
 
 ## Indexing files with NodeJS
 
-    const Library = require('@lootbox/library')
+    const Library = require('@royalarchives/library')
 
 In NodeJS you specify modules and paths using a string or arrays:
 
-    const Library = require('@lootbox/library')
+    const Library = require('@royalarchives/library')
     await Library.scan('/path/to/files')
-    await Library.scan('@lootbox/library-music', '/path/to/music')
-    await Library.scan('@lootbox/library-music', [
+    await Library.scan('@royalarchives/library-music', '/path/to/music')
+    await Library.scan('@royalarchives/library-music', [
       '/music-1/music',
       '/music-2/music',
       '/music-3/music'
@@ -122,10 +122,10 @@ In NodeJS you specify modules and paths using a string or arrays:
 
 Load your library by passing the same parameters that built it:
 
-    const Library = require('@lootbox/library')
+    const Library = require('@royalarchives/library')
     const fileLibrary = await Library.load('/path/to/files')
-    const musicLibrary = await Library.load('@lootbox/library-music', '/path/to/music')
-    const bigMusicLibrary = await Library.load('@lootbox/library-music', [
+    const musicLibrary = await Library.load('@royalarchives/library-music', '/path/to/music')
+    const bigMusicLibrary = await Library.load('@royalarchives/library-music', [
       '/music-1/music',
       '/music-2/music',
       '/music-3/music'
@@ -135,7 +135,7 @@ Load your library by passing the same parameters that built it:
 
 File information can be retrieved with an ID:
 
-    const Library = require('@lootbox/library')
+    const Library = require('@royalarchives/library')
     const fileLibrary = await Library.load('/path/to/files')
     const file = await fileLibrary.api.files.get(fileid)
 
@@ -150,7 +150,7 @@ File information can be retrieved with an ID:
 
 The files array can be sorted, filtered and paginated:
 
-    const Library = require('@lootbox/library')
+    const Library = require('@royalarchives/library')
     const fileLibrary = await Library.load('/path/to/files')
     const response = await fileLibrary.api.files.list({
       sort                 string

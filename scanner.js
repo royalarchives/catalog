@@ -20,7 +20,7 @@ if (process.argv[1] === __filename) {
   commandLineStart()
 }
 
-async function commandLineStart() {
+async function commandLineStart () {
   const catalogPaths = []
   const moduleNames = []
   let index = 2
@@ -52,7 +52,7 @@ async function commandLineStart() {
   return process.exit(0)
 }
 
-async function scan(moduleNames, catalogPaths) {
+async function scan (moduleNames, catalogPaths) {
   if (!Array.isArray(catalogPaths)) {
     catalogPaths = [catalogPaths]
   }
@@ -90,7 +90,7 @@ async function scan(moduleNames, catalogPaths) {
   console.info('[indexer', 'total scan time:', stopTime[0] + 's', stopTime[1] / 1000000 + 'ms')
 }
 
-async function scanCatalog(catalog, catalogPath) {
+async function scanCatalog (catalog, catalogPath) {
   const startTime = process.hrtime()
   console.log('[indexer]', 'scanning catalog', catalogPath)
   if (!catalog.files) {
@@ -116,7 +116,7 @@ async function scanCatalog(catalog, catalogPath) {
   return catalog
 }
 
-async function indexFolder(catalog, parentContents, currentFolder, catalogPath) {
+async function indexFolder (catalog, parentContents, currentFolder, catalogPath) {
   console.log('[indexer]', 'indexing folder', currentFolder)
   const folderContents = await fs.readdir(currentFolder)
   for (const item of folderContents) {

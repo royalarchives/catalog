@@ -12,7 +12,7 @@ if (process.argv[1] === __filename) {
   commandLineStart()
 }
 
-async function commandLineStart() {
+async function commandLineStart () {
   const moduleNames = []
   let index = 2
   while (true) {
@@ -32,7 +32,7 @@ async function commandLineStart() {
   return process.exit(0)
 }
 
-async function load(moduleNames) {
+async function load (moduleNames) {
   if (moduleNames && !Array.isArray(moduleNames)) {
     moduleNames = [moduleNames]
   }
@@ -83,7 +83,7 @@ async function load(moduleNames) {
     }
     return copyItem(catalog, treeIndex[id])
   }
-  function indexTreeItem(item) {
+  function indexTreeItem (item) {
     treeIndex[item.id] = item
     if (item.contents && item.contents.length) {
       for (const child of item.contents) {
@@ -105,7 +105,7 @@ async function load(moduleNames) {
   return catalog
 }
 
-async function loadJSONFile() {
+async function loadJSONFile () {
   const blankCatalog = {
     files: [],
     tree: {
@@ -137,7 +137,7 @@ async function loadJSONFile() {
   return blankCatalog
 }
 
-async function existsAsync(itemPath) {
+async function existsAsync (itemPath) {
   try {
     await fs.stat(itemPath)
     return true
@@ -146,11 +146,11 @@ async function existsAsync(itemPath) {
   }
 }
 
-function normalize(text) {
+function normalize (text) {
   return text.toLowerCase().replace(/[\W_]+/g, ' ').trim()
 }
 
-async function copyItem(catalog, source) {
+async function copyItem (catalog, source) {
   const item = {}
   for (const key in source) {
     if (!Array.isArray(source[key])) {
@@ -174,7 +174,7 @@ async function copyItem(catalog, source) {
   return item
 }
 
-function paginate(array, options) {
+function paginate (array, options) {
   const limit = options && options.limit ? parseInt(options.limit, 10) : 0
   const offset = options && options.offset ? parseInt(options.offset, 10) : 0
   const sizeWas = array.length
@@ -192,7 +192,7 @@ function paginate(array, options) {
   }
 }
 
-function filter(array, options) {
+function filter (array, options) {
   const filtered = []
   for (const item of array) {
     let group
@@ -251,7 +251,7 @@ function filter(array, options) {
   return filtered
 }
 
-function sort(array, options) {
+function sort (array, options) {
   if (!options.sort) {
     return array
   }
@@ -287,7 +287,7 @@ function sort(array, options) {
   return array
 }
 
-function matchInArray(array, matchType, value) {
+function matchInArray (array, matchType, value) {
   const normalizedValue = normalize(value)
   if (matchType === 'start' || matchType === 'starts') {
     return array.filter(entity => normalize(entity.name).startsWith(normalizedValue))
@@ -301,7 +301,7 @@ function matchInArray(array, matchType, value) {
   return array.filter(entity => normalize(entity.name) === normalizedValue)
 }
 
-function matchValue(item, property, matchType, value) {
+function matchValue (item, property, matchType, value) {
   const normalizedProperty = normalize(item[property])
   const normalizedValue = normalize(value)
   if (matchType === 'start' || matchType === 'starts') {

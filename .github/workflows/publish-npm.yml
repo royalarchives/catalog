@@ -21,6 +21,6 @@ jobs:
           npm install standard -g
         fi        
         standard       
-    - run: npm publish --access=public
+    - run: npm version patch && npm publish --access=public
       env:
         NODE_AUTH_TOKEN: ${{secrets.NPM_AUTOMATION_TOKEN}}

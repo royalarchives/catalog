@@ -37,7 +37,7 @@ jobs:
       uses: actions-x/commit@v2
       with:
         branch: master
-        files: package.json package-lock.json
+        files: .
         repository: https://github.com/royalarchives/catalog
         token: ${{ secrets.STUPID_GITHUB_AUTOMATION_TOKEN }}
         force: true

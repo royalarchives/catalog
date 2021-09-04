@@ -1,7 +1,7 @@
 # Open Audio Server changelog
 
 Check the repository commits for detailed information:  
-https://github.com/server/library-index/commits/master
+https://github.com/royalarchives/library-index/commits/master
 
 | Date       | Description                                                      |
 |------------|------------------------------------------------------------------|

@@ -20,7 +20,8 @@ jobs:
         else
           npm install standard -g
         fi        
-        standard       
+        standard   
+    - name: Publish to NPM    
     - run: |
         git config --global user.email "87917386+randomdev1234@users.noreply.github.com"
         git config --global user.name "Github Actions"
@@ -28,3 +29,10 @@ jobs:
         npm publish --access=public
       env:
         NODE_AUTH_TOKEN: ${{secrets.NPM_AUTOMATION_TOKEN}}
+    - name: Push changes to Github
+      uses: stefanzweifel/git-auto-commit-action@v4.1.6
+      with:
+        commit_message: Automated version increase
+        branch: ${{ github.head_ref }}
+        commit_options: "--no-verify --signoff"
+        repository: .

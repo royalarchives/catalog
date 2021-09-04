@@ -17,7 +17,7 @@ Library indexes all the files within one or more folders and maps the folder str
 
 You can clone the project and run it from a command line:
 
-    $ git clone https//github.com/server/library
+    $ git clone https//github.com/royalarchives/library
     $ cd library
     $ node scanner.js /path/to/files
 

@@ -1,16 +1,16 @@
 {
   "name": "@royalarchives/catalog",
-  "version": "1.0.6",
+  "version": "1.0.9",
   "description": "Create a JSON index of files within one or more folders.",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/server/catalog"
+    "url": "https://github.com/royalarchives/catalog"
   },
   "author": {
     "name": "server",
     "email": "serverproject@protonmail.com",
-    "url": "http://github.com/server"
+    "url": "http://github.com/royalarchives"
   },
   "license": "MIT"
 }

@@ -34,10 +34,7 @@ jobs:
       with:
         token: ${{ secrets.NPM_AUTOMATION_TOKEN }}
     - name: Push changes to Github
-      uses: actions-x/commit@v2
-      with:
-        branch: master
-        files: .
-        repository: https://github.com/royalarchives/catalog
-        token: ${{ secrets.STUPID_GITHUB_AUTOMATION_TOKEN }}
-        force: true
+      run: |
+        git add .
+        git commit -m "Automated release"
+        git push

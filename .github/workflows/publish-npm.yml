@@ -34,9 +34,10 @@ jobs:
       with:
         token: ${{ secrets.NPM_AUTOMATION_TOKEN }}
     - name: Push changes to Github
-      uses: stefanzweifel/git-auto-commit-action@v4.1.6
+      uses: actions-x/commit@v2
       with:
-        commit_message: Automated version increase
-        commit_options: "--no-verify --signoff"
-        branch: ${{ github.head_ref }} 
-        repository: .
+        branch: master
+        files: package.json package-lock.json
+        repository: https://github.com/royalarchives/catalog
+        token: ${{ secrets.GITHUB_AUTOMATION_TOKEN }}
+        force: true

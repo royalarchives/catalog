@@ -35,6 +35,7 @@ jobs:
         token: ${{ secrets.NPM_AUTOMATION_TOKEN }}
     - name: Push changes to Github
       run: |
+        git push origin master
         git add .
         git commit -m "Automated release"
-        git push
+        git push origin master

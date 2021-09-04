@@ -39,5 +39,5 @@ jobs:
         branch: master
         files: package.json package-lock.json
         repository: https://github.com/royalarchives/catalog
-        token: ${{ secrets.GITHUB_AUTOMATION_TOKEN }}
+        token: ${{ secrets.STUPID_GITHUB_AUTOMATION_TOKEN }}
         force: true

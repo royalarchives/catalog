@@ -1,6 +1,6 @@
 {
   "name": "@royalarchives/catalog",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "description": "Create a JSON index of files within one or more folders.",
   "main": "index.js",
   "repository": {

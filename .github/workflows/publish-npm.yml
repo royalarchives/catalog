@@ -9,9 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+      with:
+        ref: ${{ github.event.release.target_commitish }}
     - uses: actions/setup-node@v2
       with:
-        node-version: 14
+        node-version: lts/*
         registry-url: https://registry.npmjs.org/
     - name: Lint JavaScript source with standard.js
       run: |
@@ -36,3 +38,5 @@ jobs:
       with:
         commit_message: Automated version increase
         commit_options: "--no-verify --signoff"
+        branch: ${{ github.head_ref }} 
+        repository: .

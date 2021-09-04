@@ -27,6 +27,8 @@ jobs:
         git config --global user.name "Github Actions"
         npm version patch
         npm publish --access=public
+        git add .
+        git commit -m "Automated version increase"
       env:
         NODE_AUTH_TOKEN: ${{secrets.NPM_AUTOMATION_TOKEN}}
     - name: Push changes to Github

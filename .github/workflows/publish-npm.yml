@@ -35,6 +35,4 @@ jobs:
       uses: stefanzweifel/git-auto-commit-action@v4.1.6
       with:
         commit_message: Automated version increase
-        branch: ${{ github.head_ref }}
         commit_options: "--no-verify --signoff"
-        repository: .

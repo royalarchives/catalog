@@ -113,6 +113,7 @@ async function indexFolder (catalog, currentFolder, catalogPath) {
     const extension = itemPath.split('.').pop().toLowerCase()
     const file = {
       size: itemStat.size,
+      extension,
       path: itemPath
     }
     catalog.files.push(file)

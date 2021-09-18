@@ -93,59 +93,29 @@ async function scan (moduleNames, catalogPaths) {
 async function scanCatalog (catalog, catalogPath) {
   const startTime = process.hrtime()
   console.log('[indexer]', 'scanning catalog', catalogPath)
-  if (!catalog.files) {
-    catalog.files = []
-    catalog.tree = {
-      type: 'folder',
-      id: 'folder_/catalog',
-      folder: 'catalog',
-      contents: []
-    }
-  }
-  console.log('[indexer]', 'indexing files')
-  const folder = {
-    id: `folder_${catalogPath}`,
-    type: 'folder',
-    path: catalogPath,
-    contents: []
-  }
-  catalog.tree.contents.push(folder)
-  await indexFolder(catalog, folder.contents, catalogPath, catalogPath)
+  catalog.files = catalog.files || []
+  await indexFolder(catalog, catalogPath, catalogPath)
   const stopTime = process.hrtime(startTime)
   console.log('[indexer]', 'catalog scan time:', stopTime[0] + 's', stopTime[1] / 1000000 + 'ms')
   return catalog
 }
 
-async function indexFolder (catalog, parentContents, currentFolder, catalogPath) {
+async function indexFolder (catalog, currentFolder, catalogPath) {
   console.log('[indexer]', 'indexing folder', currentFolder)
   const folderContents = await fs.readdir(currentFolder)
   for (const item of folderContents) {
     const itemPath = path.join(currentFolder, item)
     const itemStat = await fs.stat(itemPath)
     if (itemStat.isDirectory()) {
-      const folder = {
-        id: `folder_${itemPath}`,
-        type: 'folder',
-        folder: item,
-        path: itemPath,
-        title: path.dirname(itemPath),
-        contents: []
-      }
-      parentContents.push(folder)
-      await indexFolder(catalog, folder.contents, folder.path, catalogPath)
+      await indexFolder(catalog, folder.path, catalogPath)
       continue
     }
     const extension = itemPath.split('.').pop().toLowerCase()
     const file = {
-      type: 'file',
-      id: `file_${itemPath}`,
       extension,
-      file: item,
       size: itemStat.size,
-      title: path.basename(itemPath),
       path: itemPath
     }
-    parentContents.push(file.id)
     catalog.files.push(file)
   }
 }

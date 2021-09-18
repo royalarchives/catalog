@@ -40,7 +40,6 @@ async function load (moduleNames) {
   const filePathIndex = {}
   const treeIndex = {}
   const catalog = await loadJSONFile()
-  catalog.modules = moduleNames
   catalog.api = {
     files: {
       get: require('./api/files.get.js'),
@@ -83,18 +82,6 @@ async function load (moduleNames) {
     }
     return copyItem(catalog, treeIndex[id])
   }
-  function indexTreeItem (item) {
-    treeIndex[item.id] = item
-    if (item.contents && item.contents.length) {
-      for (const child of item.contents) {
-        if (child.substring) {
-          continue
-        }
-        indexTreeItem(child)
-      }
-    }
-  }
-  indexTreeItem(catalog.tree)
   if (moduleNames) {
     for (const moduleName of moduleNames) {
       const module = require(moduleName)
@@ -107,13 +94,7 @@ async function load (moduleNames) {
 
 async function loadJSONFile () {
   const blankCatalog = {
-    files: [],
-    tree: {
-      type: 'folder',
-      id: 'folder_1',
-      folder: 'root',
-      contents: []
-    }
+    files: []
   }
   const uncompressedFilePath = path.join(process.env.DATA_PATH, 'catalog.json')
   const uncompessedFileExists = await existsAsync(uncompressedFilePath)

@@ -62,7 +62,9 @@ async function scan (moduleNames, catalogPaths) {
   const Catalog = require('./catalog.js')
   const startTime = process.hrtime()
   const catalog = await Catalog.load(moduleNames, catalogPaths)
+  delete (catalog.api)
   catalog.catalogPaths = catalogPaths
+  catalog.catalogModules = moduleNames
   catalog.files = catalog.files || []
   for (const catalogPath of catalogPaths) {
     const startTime = process.hrtime()

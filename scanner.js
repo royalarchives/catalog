@@ -107,12 +107,11 @@ async function indexFolder (catalog, currentFolder, catalogPath) {
     const itemPath = path.join(currentFolder, item)
     const itemStat = await fs.stat(itemPath)
     if (itemStat.isDirectory()) {
-      await indexFolder(catalog, folder.path, catalogPath)
+      await indexFolder(catalog, itemPath, catalogPath)
       continue
     }
     const extension = itemPath.split('.').pop().toLowerCase()
     const file = {
-      extension,
       size: itemStat.size,
       path: itemPath
     }

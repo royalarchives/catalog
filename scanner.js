@@ -62,8 +62,14 @@ async function scan (moduleNames, catalogPaths) {
   const Catalog = require('./catalog.js')
   const startTime = process.hrtime()
   const catalog = await Catalog.load(moduleNames, catalogPaths)
+  catalog.catalogPaths = catalogPaths
+  catalog.files = catalog.files || []
   for (const catalogPath of catalogPaths) {
-    await scanCatalog(catalog, catalogPath)
+    const startTime = process.hrtime()
+    console.log('[indexer]', 'scanning catalog', catalogPath)
+    await indexFolder(catalog, catalogPath, catalogPath)
+    const stopTime = process.hrtime(startTime)
+    console.log('[indexer]', 'catalog scan time:', stopTime[0] + 's', stopTime[1] / 1000000 + 'ms')
     if (moduleNames) {
       for (const moduleName of moduleNames) {
         const module = require(moduleName)
@@ -88,16 +94,6 @@ async function scan (moduleNames, catalogPaths) {
   }
   const stopTime = process.hrtime(startTime)
   console.info('[indexer', 'total scan time:', stopTime[0] + 's', stopTime[1] / 1000000 + 'ms')
-}
-
-async function scanCatalog (catalog, catalogPath) {
-  const startTime = process.hrtime()
-  console.log('[indexer]', 'scanning catalog', catalogPath)
-  catalog.files = catalog.files || []
-  await indexFolder(catalog, catalogPath, catalogPath)
-  const stopTime = process.hrtime(startTime)
-  console.log('[indexer]', 'catalog scan time:', stopTime[0] + 's', stopTime[1] / 1000000 + 'ms')
-  return catalog
 }
 
 async function indexFolder (catalog, currentFolder, catalogPath) {

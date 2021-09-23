@@ -12,5 +12,8 @@
     "email": "serverproject@protonmail.com",
     "url": "http://github.com/royalarchives"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "dree": "^2.8.3"
+  }
 }

@@ -1,3 +1,4 @@
+const dree = require('dree')
 const fs = require('fs').promises
 const path = require('path')
 const util = require('util')
@@ -66,10 +67,12 @@ async function scan (moduleNames, catalogPaths) {
   catalog.catalogPaths = catalogPaths
   catalog.catalogModules = moduleNames
   catalog.files = catalog.files || []
+
   for (const catalogPath of catalogPaths) {
     const startTime = process.hrtime()
     console.log('[indexer]', 'scanning catalog', catalogPath)
-    await indexFolder(catalog, catalogPath, catalogPath)
+    const tree = await dree.scan(catalogPath)
+    Object.assign(catalog, tree)
     const stopTime = process.hrtime(startTime)
     console.log('[indexer]', 'catalog scan time:', stopTime[0] + 's', stopTime[1] / 1000000 + 'ms')
     if (moduleNames) {
@@ -96,24 +99,4 @@ async function scan (moduleNames, catalogPaths) {
   }
   const stopTime = process.hrtime(startTime)
   console.info('[indexer', 'total scan time:', stopTime[0] + 's', stopTime[1] / 1000000 + 'ms')
-}
-
-async function indexFolder (catalog, currentFolder, catalogPath) {
-  console.log('[indexer]', 'indexing folder', currentFolder)
-  const folderContents = await fs.readdir(currentFolder)
-  for (const item of folderContents) {
-    const itemPath = path.join(currentFolder, item)
-    const itemStat = await fs.stat(itemPath)
-    if (itemStat.isDirectory()) {
-      await indexFolder(catalog, itemPath, catalogPath)
-      continue
-    }
-    const extension = itemPath.split('.').pop().toLowerCase()
-    const file = {
-      size: itemStat.size,
-      extension,
-      path: itemPath
-    }
-    catalog.files.push(file)
-  }
 }

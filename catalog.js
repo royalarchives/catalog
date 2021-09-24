@@ -94,7 +94,11 @@ async function load (moduleNames) {
 
 async function loadJSONFile () {
   const blankCatalog = {
-    files: []
+    name: '/',
+    relativePath: '/',
+    hash: '/',
+    sizeInBytes: 0,
+    children: []
   }
   const uncompressedFilePath = path.join(process.env.DATA_PATH, 'catalog.json')
   const uncompessedFileExists = await existsAsync(uncompressedFilePath)

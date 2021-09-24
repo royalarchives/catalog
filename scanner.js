@@ -70,6 +70,7 @@ async function scan (moduleNames, catalogPaths) {
   catalog.relativePath = '/'
   catalog.hash = '/'
   catalog.sizeInBytes = 0
+  catalog.children = []
   for (const catalogPath of catalogPaths) {
     const startTime = process.hrtime()
     console.log('[indexer]', 'scanning catalog', catalogPath)

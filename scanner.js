@@ -67,7 +67,7 @@ async function scan (moduleNames, catalogPaths) {
   catalog.catalogPaths = catalogPaths
   catalog.catalogModules = moduleNames
   catalog.name = '/'
-  catalog.relativePath = '/',
+  catalog.relativePath = '/'
   catalog.hash = '/'
   catalog.sizeInBytes = 0
   for (const catalogPath of catalogPaths) {

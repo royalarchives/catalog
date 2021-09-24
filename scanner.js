@@ -68,6 +68,7 @@ async function scan (moduleNames, catalogPaths) {
   catalog.catalogModules = moduleNames
   catalog.name = '/'
   catalog.relativePath = '/'
+  catalog.path = '/'
   catalog.hash = '/'
   catalog.sizeInBytes = 0
   catalog.children = []
@@ -76,7 +77,7 @@ async function scan (moduleNames, catalogPaths) {
     console.log('[indexer]', 'scanning catalog', catalogPath)
     const tree = await dree.scan(catalogPath)
     console.log('tree', tree)
-    catalog.children.push(tree)
+    catalog.children = catalog.children.concat(tree.children)
     catalog.sizeInBytes += tree.sizeInBytes
     const stopTime = process.hrtime(startTime)
     console.log('[indexer]', 'catalog scan time:', stopTime[0] + 's', stopTime[1] / 1000000 + 'ms')

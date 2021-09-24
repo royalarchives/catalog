@@ -88,7 +88,7 @@ async function load (moduleNames) {
       await module.load(catalog)
     }
   }
-  catalog.indexArray(catalog.files)
+  catalog.indexArray(catalog.children)
   return catalog
 }
 
